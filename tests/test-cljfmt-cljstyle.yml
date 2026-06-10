@@ -1,0 +1,29 @@
+name: Test cljfmt and cljstyle setup
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        with:
+          cljfmt: 'latest'
+          cljstyle: 'latest'
+      - name: Assert cljfmt is available
+        run: |
+          echo "Checking cljfmt..."
+          if ! command -v cljfmt &> /dev/null; then
+            echo "FAIL: cljfmt not found on PATH"
+            exit 1
+          fi
+          echo "PASS: cljfmt found"
+      - name: Assert cljstyle is available
+        run: |
+          echo "Checking cljstyle..."
+          if ! command -v cljstyle &> /dev/null; then
+            echo "FAIL: cljstyle not found on PATH"
+            exit 1
+          fi
+          echo "PASS: cljstyle found"

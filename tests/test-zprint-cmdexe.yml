@@ -1,0 +1,21 @@
+name: Test zprint and cmd-exe-workaround setup
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        with:
+          zprint: 'latest'
+          cmd-exe-workaround: 'latest'
+      - name: Assert zprint is available
+        run: |
+          echo "Checking zprint..."
+          if ! command -v zprint &> /dev/null; then
+            echo "FAIL: zprint not found on PATH"
+            exit 1
+          fi
+          echo "PASS: zprint found"

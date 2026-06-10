@@ -1,0 +1,29 @@
+name: Test lein and boot setup
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        with:
+          lein: '2.11.2'
+          boot: '2.8.3'
+      - name: Assert lein is available
+        run: |
+          echo "Checking lein..."
+          if ! command -v lein &> /dev/null; then
+            echo "FAIL: lein not found on PATH"
+            exit 1
+          fi
+          echo "PASS: lein found"
+      - name: Assert boot is available
+        run: |
+          echo "Checking boot..."
+          if ! command -v boot &> /dev/null; then
+            echo "FAIL: boot not found on PATH"
+            exit 1
+          fi
+          echo "PASS: boot found"
