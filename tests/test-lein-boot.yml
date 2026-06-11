@@ -14,7 +14,7 @@ jobs:
       - name: Assert lein is available
         run: |
           echo "Checking lein..."
-          if ! command -v lein &> /dev/null; then
+          if ! command -v lein &>/dev/null; then
             echo "FAIL: lein not found on PATH"
             exit 1
           fi
@@ -22,7 +22,7 @@ jobs:
       - name: Assert boot is available
         run: |
           echo "Checking boot..."
-          if ! command -v boot &> /dev/null; then
+          if ! command -v boot &>/dev/null; then
             echo "FAIL: boot not found on PATH"
             exit 1
           fi

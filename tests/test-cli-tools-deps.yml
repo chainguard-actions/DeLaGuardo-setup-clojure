@@ -10,11 +10,11 @@ jobs:
         uses: .
         with:
           cli: '1.11.3.1456'
-          tools-deps: '1.11.3.1456'
+          tools-deps: '1.11.1.1413'
       - name: Assert clojure CLI is available
         run: |
-          echo "Checking clojure CLI..."
-          if ! command -v clojure &> /dev/null; then
+          echo "Checking clojure..."
+          if ! command -v clojure &>/dev/null; then
             echo "FAIL: clojure not found on PATH"
             exit 1
           fi
