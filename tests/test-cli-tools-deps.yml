@@ -1,0 +1,22 @@
+name: Test cli and tools-deps setup
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        with:
+          cli: '1.11.3.1456'
+          tools-deps: '1.11.3.1456'
+          github-token: ${{ github.token }}
+      - name: Assert clojure CLI is available
+        run: |
+          echo "Checking clojure..."
+          if ! command -v clojure &> /dev/null; then
+            echo "FAIL: clojure not found on PATH"
+            exit 1
+          fi
+          echo "PASS: clojure found"

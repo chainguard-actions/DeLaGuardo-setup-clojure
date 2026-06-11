@@ -1,0 +1,30 @@
+name: Test babashka and clj-kondo setup
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        with:
+          bb: 'latest'
+          clj-kondo: 'latest'
+          github-token: ${{ github.token }}
+      - name: Assert bb is available
+        run: |
+          echo "Checking bb..."
+          if ! command -v bb &> /dev/null; then
+            echo "FAIL: bb not found on PATH"
+            exit 1
+          fi
+          echo "PASS: bb found"
+      - name: Assert clj-kondo is available
+        run: |
+          echo "Checking clj-kondo..."
+          if ! command -v clj-kondo &> /dev/null; then
+            echo "FAIL: clj-kondo not found on PATH"
+            exit 1
+          fi
+          echo "PASS: clj-kondo found"
