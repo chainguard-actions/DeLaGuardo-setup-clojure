@@ -1,0 +1,33 @@
+name: Test setup-clojure with Babashka latest
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      RUNNER_TOOL_CACHE: /tmp/hostedtoolcache
+      ACTIONS_CACHE_URL: ''
+      ACTIONS_RUNTIME_TOKEN: ''
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Prepare tool cache dir
+        run: mkdir -p /tmp/hostedtoolcache
+      - id: action
+        uses: .
+        with:
+          bb: 'latest'
+          github-token: ${{ github.token }}
+      - name: Assert bb latest is installed
+        run: |
+          echo "Checking babashka latest installation..."
+          if ! command -v bb &>/dev/null; then
+            echo "FAIL: bb command not found"
+            exit 1
+          fi
+          BB_VERSION=$(bb --version 2>&1 || true)
+          echo "bb version output: $BB_VERSION"
+          if [ -z "$BB_VERSION" ]; then
+            echo "FAIL: bb --version returned empty output"
+            exit 1
+          fi
+          echo "PASS: babashka latest is installed: $BB_VERSION"

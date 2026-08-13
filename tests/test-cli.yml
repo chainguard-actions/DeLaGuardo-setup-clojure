@@ -1,0 +1,34 @@
+name: Test setup-clojure with Clojure CLI
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      RUNNER_TOOL_CACHE: /tmp/hostedtoolcache
+      ACTIONS_CACHE_URL: ''
+      ACTIONS_RUNTIME_TOKEN: ''
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Prepare tool cache dir
+        run: mkdir -p /tmp/hostedtoolcache
+      - id: action
+        uses: .
+        with:
+          cli: '1.11.3.1463'
+          github-token: ${{ github.token }}
+      - name: Assert clojure CLI is installed
+        run: |
+          echo "Checking Clojure CLI installation..."
+          if ! command -v clojure &>/dev/null; then
+            echo "FAIL: clojure command not found"
+            exit 1
+          fi
+          CLJ_VERSION=$(clojure --version 2>&1 || true)
+          echo "clojure version output: $CLJ_VERSION"
+          if echo "$CLJ_VERSION" | grep -q "1.11.3.1463"; then
+            echo "PASS: Clojure CLI 1.11.3.1463 is installed"
+          else
+            echo "FAIL: expected Clojure CLI 1.11.3.1463 but got: $CLJ_VERSION"
+            exit 1
+          fi

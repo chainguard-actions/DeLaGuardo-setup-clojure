@@ -1,0 +1,39 @@
+name: Test setup-clojure with Leiningen
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      RUNNER_TOOL_CACHE: /tmp/hostedtoolcache
+      ACTIONS_CACHE_URL: ''
+      ACTIONS_RUNTIME_TOKEN: ''
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Prepare tool cache dir and ensure Java is available
+        run: |
+          mkdir -p /tmp/hostedtoolcache
+          if ! command -v java &>/dev/null; then
+            apt-get update -qq && apt-get install -y -qq default-jre-headless
+          fi
+          java -version
+      - id: action
+        uses: .
+        with:
+          lein: '2.11.2'
+          github-token: ${{ github.token }}
+      - name: Assert lein is installed
+        run: |
+          echo "Checking lein installation..."
+          if ! command -v lein &>/dev/null; then
+            echo "FAIL: lein command not found"
+            exit 1
+          fi
+          LEIN_VERSION=$(lein version 2>&1 || true)
+          echo "lein version output: $LEIN_VERSION"
+          if echo "$LEIN_VERSION" | grep -q "2.11.2"; then
+            echo "PASS: lein 2.11.2 is installed"
+          else
+            echo "FAIL: expected lein 2.11.2 but got: $LEIN_VERSION"
+            exit 1
+          fi

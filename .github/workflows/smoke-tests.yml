@@ -1,0 +1,366 @@
+name: Smoke tests
+
+on: [push]
+
+permissions: {}
+
+jobs:
+  # Deprecated version identifier
+  # Please use `cli: version` as in job `clojure-cli`
+  test-tools-deps:
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          # - macOS-latest
+          # - windows-latest
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # main
+
+      - name: Prepare java
+        uses: actions/setup-java@17f84c3641ba7b8f6deff6309fc4c864478f5d62 # v3
+        with:
+          distribution: "zulu"
+          java-version: "8"
+
+      - name: Install clojure tools-deps
+        uses: ./
+        with:
+          tools-deps: 1.11.4.1474
+
+      - name: Execute clojure code
+        run: clojure -e "(+ 1 1)"
+
+  test-clojure-cli:
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          # - macOS-latest
+          # - windows-latest
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # main
+
+      - name: Prepare java
+        uses: actions/setup-java@17f84c3641ba7b8f6deff6309fc4c864478f5d62 # v3
+        with:
+          distribution: "zulu"
+          java-version: "8"
+
+      - name: Install Clojure CLI
+        uses: ./
+        with:
+          cli: 1.11.4.1474
+
+      - name: Execute clojure code
+        run: clojure -e "(+ 1 1)"
+
+  test-clojure-cli-latest:
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          # - macOS-latest
+          # - windows-latest
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # main
+
+      - name: Prepare java
+        uses: actions/setup-java@17f84c3641ba7b8f6deff6309fc4c864478f5d62 # v3
+        with:
+          distribution: "zulu"
+          java-version: "8"
+
+      - name: Install Clojure CLI
+        uses: ./
+        with:
+          cli: latest
+
+      - name: Execute clojure code
+        run: clojure -e "(+ 1 1)"
+
+  test-leiningen:
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          # - macOS-latest
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # main
+
+      - name: Prepare java
+        uses: actions/setup-java@17f84c3641ba7b8f6deff6309fc4c864478f5d62 # v3
+        with:
+          distribution: "zulu"
+          java-version: "8"
+
+      - name: Install leiningen
+        uses: ./
+        with:
+          lein: 2.9.1
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check leiningen version
+        run: lein version
+
+  # test-leiningen-windows:
+  #   runs-on: windows-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # main
+
+  #     - name: Prepare java
+  #       uses: actions/setup-java@17f84c3641ba7b8f6deff6309fc4c864478f5d62 # v3
+  #       with:
+  #         distribution: "zulu"
+  #         java-version: "8"
+
+  #     - name: Install leiningen
+  #       uses: ./
+  #       with:
+  #         lein: latest
+
+  #     - name: lein powershell
+  #       shell: powershell
+  #       run: |
+  #         lein version
+
+  #     - name: lein cmd
+  #       shell: cmd
+  #       run: |
+  #         lein version
+
+  test-boot:
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          # - macOS-latest
+          # - windows-latest
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # main
+
+      - name: Prepare java
+        uses: actions/setup-java@17f84c3641ba7b8f6deff6309fc4c864478f5d62 # v3
+        with:
+          distribution: "zulu"
+          java-version: "11"
+
+      - name: Install boot
+        uses: ./
+        with:
+          boot: 2.8.3
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check boot version
+        run: boot -V
+
+  test-bb:
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          # - macOS-latest
+          # - windows-latest
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # main
+
+      - name: Prepare java
+        uses: actions/setup-java@17f84c3641ba7b8f6deff6309fc4c864478f5d62 # v3
+        with:
+          distribution: "zulu"
+          java-version: "8"
+
+      - name: Install babashka
+        uses: ./
+        with:
+          bb: latest
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check babashka version
+        run: bb --version
+
+  test-clj-kondo:
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          # - macOS-latest
+          # - windows-latest
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # main
+
+      - name: Prepare java
+        uses: actions/setup-java@17f84c3641ba7b8f6deff6309fc4c864478f5d62 # v3
+        with:
+          distribution: "zulu"
+          java-version: "8"
+
+      - name: Install clj-kondo
+        uses: ./
+        with:
+          clj-kondo: latest
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check clj-kondo version
+        run: clj-kondo --version
+
+  test-cljfmt:
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          # - macOS-latest
+          # - windows-latest
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # main
+
+      - name: Prepare java
+        uses: actions/setup-java@17f84c3641ba7b8f6deff6309fc4c864478f5d62 # v3
+        with:
+          distribution: "zulu"
+          java-version: "8"
+
+      - name: Install cljfmt
+        uses: ./
+        with:
+          cljfmt: latest
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check cljfmt version
+        run: cljfmt --version
+
+  test-cljstyle:
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          # - macOS-latest
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # main
+
+      - name: Prepare java
+        uses: actions/setup-java@17f84c3641ba7b8f6deff6309fc4c864478f5d62 # v3
+        with:
+          distribution: "zulu"
+          java-version: "8"
+
+      - name: Install cljstyle
+        uses: ./
+        with:
+          cljstyle: latest
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check cljstyle version
+        run: cljstyle version
+
+  test-zprint:
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          # - macOS-latest
+          # - windows-latest
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # main
+
+      - name: Prepare java
+        uses: actions/setup-java@17f84c3641ba7b8f6deff6309fc4c864478f5d62 # v3
+        with:
+          distribution: "zulu"
+          java-version: "8"
+
+      - name: Install zprint
+        uses: ./
+        with:
+          zprint: latest
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check zprint version
+        run: zprint --version
+
+  all-together:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # main
+
+      - name: Prepare java
+        uses: actions/setup-java@17f84c3641ba7b8f6deff6309fc4c864478f5d62 # v3
+        with:
+          distribution: "zulu"
+          java-version: "8"
+
+      - name: Install all the tools
+        uses: ./
+        with:
+          cli: 1.11.4.1474
+          lein: 2.11.0
+          boot: 2.8.3
+          bb: 0.8.157
+          clj-kondo: 2022.06.22
+          cljstyle: 0.16.626
+          zprint: 1.2.3
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check Clojure CLI
+        run: clojure -Sdescribe
+
+      - name: Check leiningen version
+        run: lein version
+
+      - name: Check boot version
+        run: boot -V
+
+      - name: Check babashka version
+        run: bb --version
+
+      - name: Check clj-kondo version
+        run: clj-kondo --version
+
+      - name: Check cljstyle version
+        run: cljstyle version
+
+      - name: Check zprint version
+        run: zprint --version

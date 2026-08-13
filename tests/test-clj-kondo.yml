@@ -1,0 +1,34 @@
+name: Test setup-clojure with clj-kondo
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      RUNNER_TOOL_CACHE: /tmp/hostedtoolcache
+      ACTIONS_CACHE_URL: ''
+      ACTIONS_RUNTIME_TOKEN: ''
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Prepare tool cache dir
+        run: mkdir -p /tmp/hostedtoolcache
+      - id: action
+        uses: .
+        with:
+          clj-kondo: '2024.03.13'
+          github-token: ${{ github.token }}
+      - name: Assert clj-kondo is installed
+        run: |
+          echo "Checking clj-kondo installation..."
+          if ! command -v clj-kondo &>/dev/null; then
+            echo "FAIL: clj-kondo command not found"
+            exit 1
+          fi
+          KONDO_VERSION=$(clj-kondo --version 2>&1 || true)
+          echo "clj-kondo version output: $KONDO_VERSION"
+          if echo "$KONDO_VERSION" | grep -q "2024.03.13"; then
+            echo "PASS: clj-kondo 2024.03.13 is installed"
+          else
+            echo "FAIL: expected clj-kondo 2024.03.13 but got: $KONDO_VERSION"
+            exit 1
+          fi

@@ -1,4 +1,4 @@
-name: Test cmd-exe-workaround input
+name: Test cmd-exe-workaround (deprecated) input
 on:
   workflow_dispatch:
 jobs:
@@ -10,8 +10,9 @@ jobs:
         uses: .
         with:
           cmd-exe-workaround: 'latest'
-          github-token: ${{ github.token }}
-      - name: Assert action completed
+      - name: Assert clojure/deps.clj is available
         run: |
-          echo "Action completed with cmd-exe-workaround input"
+          echo "Checking clojure availability after cmd-exe-workaround..."
+          which clojure || (echo "FAIL: clojure not found on PATH" && exit 1)
+          clojure --version || true
           echo "PASS"

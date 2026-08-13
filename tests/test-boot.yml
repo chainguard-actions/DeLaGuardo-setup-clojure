@@ -1,0 +1,21 @@
+name: Test boot-clj setup
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        with:
+          boot: '2.8.3'
+      - name: Assert boot is available
+        run: |
+          echo "Checking boot version..."
+          boot --version
+          if ! boot --version 2>&1 | grep -q '2.8.3'; then
+            echo "FAIL: boot 2.8.3 not found in output"
+            exit 1
+          fi
+          echo "PASS"

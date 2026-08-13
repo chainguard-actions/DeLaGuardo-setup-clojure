@@ -1,0 +1,70 @@
+name: Test setup-clojure with multiple tools
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      RUNNER_TOOL_CACHE: /tmp/hostedtoolcache
+      ACTIONS_CACHE_URL: ''
+      ACTIONS_RUNTIME_TOKEN: ''
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Prepare tool cache dir and ensure Java is available
+        run: |
+          mkdir -p /tmp/hostedtoolcache
+          if ! command -v java &>/dev/null; then
+            apt-get update -qq && apt-get install -y -qq default-jre-headless
+          fi
+          java -version
+      - id: action
+        uses: .
+        with:
+          lein: '2.11.2'
+          bb: '1.3.191'
+          clj-kondo: 'latest'
+          github-token: ${{ github.token }}
+      - name: Assert lein is installed
+        run: |
+          echo "Checking lein installation..."
+          if ! command -v lein &>/dev/null; then
+            echo "FAIL: lein command not found"
+            exit 1
+          fi
+          LEIN_VERSION=$(lein version 2>&1 || true)
+          echo "lein version output: $LEIN_VERSION"
+          if echo "$LEIN_VERSION" | grep -q "2.11.2"; then
+            echo "PASS: lein 2.11.2 is installed"
+          else
+            echo "FAIL: expected lein 2.11.2 but got: $LEIN_VERSION"
+            exit 1
+          fi
+      - name: Assert bb is installed
+        run: |
+          echo "Checking babashka installation..."
+          if ! command -v bb &>/dev/null; then
+            echo "FAIL: bb command not found"
+            exit 1
+          fi
+          BB_VERSION=$(bb --version 2>&1 || true)
+          echo "bb version output: $BB_VERSION"
+          if echo "$BB_VERSION" | grep -q "1.3.191"; then
+            echo "PASS: babashka 1.3.191 is installed"
+          else
+            echo "FAIL: expected babashka 1.3.191 but got: $BB_VERSION"
+            exit 1
+          fi
+      - name: Assert clj-kondo is installed
+        run: |
+          echo "Checking clj-kondo installation..."
+          if ! command -v clj-kondo &>/dev/null; then
+            echo "FAIL: clj-kondo command not found"
+            exit 1
+          fi
+          KONDO_VERSION=$(clj-kondo --version 2>&1 || true)
+          echo "clj-kondo version output: $KONDO_VERSION"
+          if [ -z "$KONDO_VERSION" ]; then
+            echo "FAIL: clj-kondo --version returned empty output"
+            exit 1
+          fi
+          echo "PASS: clj-kondo latest is installed: $KONDO_VERSION"

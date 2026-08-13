@@ -1,0 +1,21 @@
+name: Test tools-deps (deprecated) setup
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        with:
+          tools-deps: '1.11.1.1413'
+      - name: Assert clojure CLI is available
+        run: |
+          echo "Checking clojure CLI version..."
+          clojure --version
+          if ! clojure --version 2>&1 | grep -qiE '1\.11\.1\.1413|clojure'; then
+            echo "FAIL: expected clojure CLI to be available"
+            exit 1
+          fi
+          echo "PASS"
