@@ -11,6 +11,7 @@ Hardened by [Chainguard](https://www.chainguard.dev) from the upstream action at
 | 13 | [`13`](https://github.com/chainguard-actions/DeLaGuardo-setup-clojure/tree/13) | [`e6e77cd`](https://github.com/DeLaGuardo/setup-clojure/commit/e6e77cdf6873b7af18609cf29f24bee054c5be72) |
 | 13.5 | [`13.5`](https://github.com/chainguard-actions/DeLaGuardo-setup-clojure/tree/13.5) | [`f556541`](https://github.com/DeLaGuardo/setup-clojure/commit/f556541eb28a9303896cee0679ba9f60b898300f) |
 | 13.5.3 | [`13.5.3`](https://github.com/chainguard-actions/DeLaGuardo-setup-clojure/tree/13.5.3) | [`e6e77cd`](https://github.com/DeLaGuardo/setup-clojure/commit/e6e77cdf6873b7af18609cf29f24bee054c5be72) |
+| 13.7.0 | [`13.7.0`](https://github.com/chainguard-actions/DeLaGuardo-setup-clojure/tree/13.7.0) | [`6d46099`](https://github.com/DeLaGuardo/setup-clojure/commit/6d46099eae24853c33c0482f2bb54edf4f1a4c74) |
 
 ## Privacy
 
