@@ -1,0 +1,57 @@
+{
+  "name": "setup-clojure",
+  "version": "13.7.0",
+  "private": true,
+  "description": "setup clojure action",
+  "main": "lib/setup-clojure.js",
+  "scripts": {
+    "build": "tsc",
+    "format": "prettier --write **/*.ts",
+    "format-check": "prettier --check **/*.ts",
+    "lint": "eslint src/**/*.ts",
+    "package": "ncc build ./lib/setup-clojure.js --source-map",
+    "test": "jest",
+    "update-deps": "ncu -u",
+    "release": "npm run build && npm run format && npm run lint && npm run package",
+    "all": "npm run release && npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DeLaGuardo/setup-clojure.git"
+  },
+  "keywords": [
+    "actions",
+    "node",
+    "setup"
+  ],
+  "author": "DeLaGuardo",
+  "license": "MIT",
+  "dependencies": {
+    "@actions/cache": "^5.0.5",
+    "@actions/core": "^2.0.3",
+    "@actions/exec": "^2.0.0",
+    "@actions/http-client": "^3.0.2",
+    "@actions/io": "^2.0.0",
+    "@actions/tool-cache": "^3.0.1"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.5",
+    "@eslint/js": "^9.39.4",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^25.9.1",
+    "@types/semver": "^7.7.1",
+    "@typescript-eslint/parser": "^8.59.4",
+    "@vercel/ncc": "^0.38.4",
+    "eslint": "^9.39.4",
+    "eslint-plugin-github": "^6.0.0",
+    "eslint-plugin-jest": "^29.15.2",
+    "globals": "^17.6.0",
+    "jest": "^30.4.2",
+    "jest-circus": "^30.4.2",
+    "js-yaml": "^4.1.1",
+    "prettier": "3.8.3",
+    "ts-jest": "^29.4.10",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.59.4"
+  }
+}

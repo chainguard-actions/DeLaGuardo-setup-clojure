@@ -1,0 +1,24 @@
+name: Test Clojure CLI setup
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: setup
+        uses: .
+        with:
+          cli: '1.11.1.1413'
+          github-token: ${{ github.token }}
+      - name: Assert clojure CLI is available
+        run: |
+          echo "Checking clojure CLI..."
+          CLJ_VERSION=$(clojure --version 2>&1 || true)
+          echo "clojure version output: $CLJ_VERSION"
+          if echo "$CLJ_VERSION" | grep -qi "clojure"; then
+            echo "PASS: clojure CLI is available"
+          else
+            echo "FAIL: clojure CLI not found"
+            exit 1
+          fi

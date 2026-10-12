@@ -1,0 +1,22 @@
+name: Test boot input
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        with:
+          boot: '2.8.3'
+      - name: Assert boot is installed
+        run: |
+          echo "Checking boot installation..."
+          if ! command -v boot &>/dev/null; then
+            echo "FAIL: boot command not found"
+            exit 1
+          fi
+          BOOT_VERSION="$(boot --version 2>&1 || true)"
+          echo "boot version output: $BOOT_VERSION"
+          echo "PASS: boot is available"

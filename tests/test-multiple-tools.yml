@@ -1,0 +1,52 @@
+name: Test multiple tools setup
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Install Java
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq default-jdk-headless
+      - id: setup
+        uses: .
+        with:
+          lein: '2.11.2'
+          bb: 'latest'
+          clj-kondo: 'latest'
+          github-token: ${{ github.token }}
+      - name: Assert lein is available
+        run: |
+          echo "Checking lein..."
+          LEIN_VERSION=$(lein version 2>&1 || true)
+          echo "lein output: $LEIN_VERSION"
+          if echo "$LEIN_VERSION" | grep -qi "leiningen"; then
+            echo "PASS: lein is available"
+          else
+            echo "FAIL: lein not found"
+            exit 1
+          fi
+      - name: Assert bb is available
+        run: |
+          echo "Checking babashka..."
+          BB_VERSION=$(bb --version 2>&1 || true)
+          echo "bb output: $BB_VERSION"
+          if echo "$BB_VERSION" | grep -qi "babashka"; then
+            echo "PASS: babashka is available"
+          else
+            echo "FAIL: babashka not found"
+            exit 1
+          fi
+      - name: Assert clj-kondo is available
+        run: |
+          echo "Checking clj-kondo..."
+          KONDO_VERSION=$(clj-kondo --version 2>&1 || true)
+          echo "clj-kondo output: $KONDO_VERSION"
+          if echo "$KONDO_VERSION" | grep -qi "clj-kondo"; then
+            echo "PASS: clj-kondo is available"
+          else
+            echo "FAIL: clj-kondo not found"
+            exit 1
+          fi

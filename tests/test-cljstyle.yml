@@ -1,0 +1,22 @@
+name: Test cljstyle input
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        with:
+          cljstyle: 'latest'
+      - name: Assert cljstyle is installed
+        run: |
+          echo "Checking cljstyle installation..."
+          if ! command -v cljstyle &>/dev/null; then
+            echo "FAIL: cljstyle command not found"
+            exit 1
+          fi
+          CLJSTYLE_VERSION="$(cljstyle version 2>&1 || true)"
+          echo "cljstyle version output: $CLJSTYLE_VERSION"
+          echo "PASS: cljstyle is available"

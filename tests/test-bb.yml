@@ -1,0 +1,24 @@
+name: Test Babashka setup
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: setup
+        uses: .
+        with:
+          bb: 'latest'
+          github-token: ${{ github.token }}
+      - name: Assert bb is available
+        run: |
+          echo "Checking babashka (bb) version..."
+          BB_VERSION=$(bb --version 2>&1 || true)
+          echo "bb version output: $BB_VERSION"
+          if echo "$BB_VERSION" | grep -qi "babashka"; then
+            echo "PASS: babashka is available"
+          else
+            echo "FAIL: babashka not found"
+            exit 1
+          fi

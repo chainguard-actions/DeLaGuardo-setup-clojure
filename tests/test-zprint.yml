@@ -1,0 +1,24 @@
+name: Test zprint setup
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: setup
+        uses: .
+        with:
+          zprint: 'latest'
+          github-token: ${{ github.token }}
+      - name: Assert zprint is available
+        run: |
+          echo "Checking zprint version..."
+          ZPRINT_VERSION=$(zprint --version 2>&1 || true)
+          echo "zprint version output: $ZPRINT_VERSION"
+          if echo "$ZPRINT_VERSION" | grep -qi "zprint"; then
+            echo "PASS: zprint is available"
+          else
+            echo "FAIL: zprint not found"
+            exit 1
+          fi
